@@ -1,0 +1,1 @@
+date,model,prompt_id,test_ref,build_ok,repeat5_ok,adds_value,mutation_killed,assertion_reviewed,verdict,failure_category,minutes_ai,minutes_manual_est,notes

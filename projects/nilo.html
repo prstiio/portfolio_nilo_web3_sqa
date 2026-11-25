@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NILO case study | Prstio</title>
+<meta name="description" content="NILO seen two ways: what was built (Web3) and how its quality is checked (SQA).">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="../index.html">Prstio</a>
+  <nav aria-label="Main">
+    <a href="../web3/index.html">Web3 Builder</a>
+    <a href="../sqa/index.html">SQA Engineer</a>
+    <a href="../projects/nilo.html" aria-current="page">NILO case study</a>
+  </nav>
+</div></header>
+<main class="wrap">
+<section class="hero">
+  <h1>NILO</h1>
+  <p class="lead">One product, two lenses. The same evidence is explained differently for each audience.</p>
+</section>
+<p class="note">Everything on this page marked EXAMPLE came from a draft and has not been verified. Replace it with your own observations, with dates, before publishing.</p>
+<div class="split">
+  <section class="web3">
+    <h2>Build lens (Web3)</h2>
+    <h3>Goal</h3>
+    <p>Let Web3 features complement a Web2 foundation without disrupting the main experience.</p>
+    <h3>Contribution <span class="badge">EXAMPLE</span></h3>
+    <ul class="plain">
+      <li>Wallet Preview: connection status.</li>
+      <li>Read-only address, network, balance.</li>
+      <li>Documented limits: no transaction execution.</li>
+    </ul>
+    <p>Stack: Next.js, React, TypeScript, EIP-1193. <a href="../web3/index.html">More on the Web3 page</a>.</p>
+  </section>
+  <section class="sqa">
+    <h2>Quality lens (SQA)</h2>
+    <h3>Goal</h3>
+    <p>Evaluate the main flows for function, layout, and responsiveness, and report findings with evidence.</p>
+    <h3>Scope</h3>
+    <ul class="plain">
+      <li>Open the home page; navigate to the Web3 section.</li>
+      <li>Wallet unavailable: is the state explained clearly?</li>
+      <li>Desktop and mobile viewports.</li>
+      <li>Page response and horizontal overflow.</li>
+    </ul>
+    <p>Manual vs automated: state which is which. Do not claim automation that does not exist.</p>
+  </section>
+</div>
+<h2>Observations</h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Check</th><th>Result</th><th>Evidence</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>Home page loads</td><td>HTTP 200</td><td>TODO: date, tool, screenshot</td><td><span class="badge">EXAMPLE</span></td></tr>
+    <tr><td>Wallet unavailable message</td><td>Shown when no wallet extension exists</td><td>TODO: screenshot, steps</td><td><span class="badge">EXAMPLE</span></td></tr>
+    <tr><td>Horizontal overflow (desktop, mobile)</td><td>None found at the sizes tested</td><td>TODO: viewport sizes</td><td><span class="badge">EXAMPLE</span></td></tr>
+    <tr><td>Console warning</td><td>Three.js deprecation for THREE.Clock</td><td>TODO: console capture</td><td><span class="badge">EXAMPLE</span></td></tr>
+  </tbody>
+</table></div>
+<h2>Bugs and risks</h2>
+<p>TODO: link real reports in <code>sqa/03-bug-reports/</code>. A deprecation warning is an observation, not necessarily a bug; classify it honestly.</p>
+<h2>Ethics</h2>
+<p>NILO is my own product, so testing it is in scope. Any third-party service it calls is not.</p>
+</main>
+<footer class="site"><div class="wrap">
+  <p>TODO: contact (email / LinkedIn). Source: <a href="https://github.com/&lt;USERNAME&gt;/&lt;REPO&gt;">github.com/&lt;USERNAME&gt;/&lt;REPO&gt;</a>. Testing is limited to practice sites, my own apps, and programs that allow it (see SECURITY.md).</p>
+</div></footer>
+</body>
+</html>

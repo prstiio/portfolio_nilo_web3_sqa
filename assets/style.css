@@ -1,0 +1,83 @@
+:root {
+  --bg: #faf8f4;
+  --surface: #ffffff;
+  --ink: #1d1b18;
+  --muted: #5d5850;
+  --line: #e4dfd5;
+  --web3: #b45309;
+  --web3-soft: #fdf1e3;
+  --sqa: #0f766e;
+  --sqa-soft: #e3f4f1;
+  --warn-bg: #fff6d6;
+  --warn-ink: #5c4500;
+  --radius: 14px;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-head: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14130f;
+    --surface: #1d1b16;
+    --ink: #f1ede4;
+    --muted: #b0a999;
+    --line: #34312a;
+    --web3: #f0a04b;
+    --web3-soft: #2b2113;
+    --sqa: #4fd1c2;
+    --sqa-soft: #11302d;
+    --warn-bg: #3a3010;
+    --warn-ink: #f3dd8a;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 17px/1.6 var(--font-body);
+}
+a { color: inherit; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--sqa); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+header.site { border-bottom: 1px solid var(--line); }
+header.site .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; justify-content: space-between; padding-top: 14px; padding-bottom: 14px; }
+header.site .brand { font-family: var(--font-head); font-weight: 700; font-size: 1.15rem; text-decoration: none; }
+header.site nav { display: flex; gap: 18px; font-size: .95rem; }
+header.site nav a { color: var(--muted); text-decoration: none; padding: 4px 0; border-bottom: 2px solid transparent; }
+header.site nav a:hover, header.site nav a[aria-current="page"] { color: var(--ink); border-color: currentColor; }
+h1, h2, h3 { font-family: var(--font-head); line-height: 1.2; margin: 0 0 .5em; }
+h1 { font-size: clamp(2rem, 6vw, 3rem); }
+h2 { font-size: 1.5rem; margin-top: 2.2em; }
+.card h2, .split h2 { margin-top: 0; }
+h3 { font-size: 1.15rem; }
+p { margin: 0 0 1em; }
+.lead { font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.hero { padding: 56px 0 24px; }
+.cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin: 24px 0; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; display: flex; flex-direction: column; gap: 8px; }
+.card .tag { font: 600 .78rem var(--font-body); letter-spacing: .06em; text-transform: uppercase; }
+.card.web3 { border-top: 5px solid var(--web3); }
+.card.web3 .tag { color: var(--web3); }
+.card.sqa { border-top: 5px solid var(--sqa); }
+.card.sqa .tag { color: var(--sqa); }
+.btn { display: inline-block; margin-top: auto; padding: 10px 16px; border-radius: 10px; border: 1.5px solid currentColor; text-decoration: none; font-weight: 600; width: fit-content; }
+.card.web3 .btn { color: var(--web3); }
+.card.sqa .btn { color: var(--sqa); }
+.btn:hover { background: var(--bg); }
+ul.plain { padding-left: 1.2em; margin: 0 0 1em; }
+ul.plain li { margin-bottom: .35em; }
+table { width: 100%; border-collapse: collapse; font-size: .95rem; margin: 12px 0 24px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.table-scroll { overflow-x: auto; }
+code { font-family: var(--font-mono); font-size: .9em; background: var(--surface); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
+.note { background: var(--warn-bg); color: var(--warn-ink); border-radius: 10px; padding: 12px 14px; font-size: .95rem; margin: 16px 0; }
+.badge { display: inline-block; font-size: .75rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--warn-bg); color: var(--warn-ink); }
+.split { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.split > div { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; }
+.split .web3 h3 { color: var(--web3); }
+.split .sqa h3 { color: var(--sqa); }
+footer.site { border-top: 1px solid var(--line); margin-top: 56px; padding: 24px 0 40px; color: var(--muted); font-size: .9rem; }
+@media (max-width: 520px) { body { font-size: 16px; } .hero { padding-top: 32px; } }

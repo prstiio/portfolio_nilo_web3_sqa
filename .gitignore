@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Test output
+sqa/web-ui-playwright/test-results/
+sqa/web-ui-playwright/playwright-report/
+sqa/web-ui-playwright/blob-report/
+sqa/api-testing/reports/
+.pytest_cache/
+.ruff_cache/
+
+# Generated summaries (commit manually if you want to keep a snapshot)
+sqa/05-reports/latest/*
+!sqa/05-reports/latest/.gitkeep
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+*.log

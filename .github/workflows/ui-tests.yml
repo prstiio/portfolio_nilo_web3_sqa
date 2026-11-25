@@ -1,0 +1,77 @@
+name: UI tests
+
+on:
+  push:
+    branches: [main]
+    paths: ['sqa/web-ui-playwright/**', '.github/workflows/ui-tests.yml']
+  pull_request:
+    paths: ['sqa/web-ui-playwright/**', '.github/workflows/ui-tests.yml']
+  schedule:
+    - cron: '0 2 * * *' # nightly regression
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ui-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: sqa/web-ui-playwright
+
+jobs:
+  selftest-mock:
+    name: Framework self-test (local mock)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: sqa/web-ui-playwright/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:mock
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ui-mock-results
+          path: sqa/web-ui-playwright/test-results/
+          retention-days: 14
+
+  real-target:
+    name: Tests on ${{ matrix.project }} (real demo site)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: sqa/web-ui-playwright/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.project }}
+      - name: Run tests
+        run: npx playwright test --project=${{ matrix.project }}
+      - name: Summarize
+        if: always()
+        working-directory: .
+        run: python sqa/05-reports/generate_summary.py --playwright sqa/web-ui-playwright/test-results/results.json --out "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-${{ matrix.project }}
+          path: |
+            sqa/web-ui-playwright/playwright-report/
+            sqa/web-ui-playwright/test-results/
+          retention-days: 14

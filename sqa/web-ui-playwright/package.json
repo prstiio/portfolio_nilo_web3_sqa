@@ -1,0 +1,27 @@
+{
+  "name": "web-ui-playwright",
+  "version": "2.0.0",
+  "private": true,
+  "description": "UI automation with Playwright + TypeScript (Page Object Model)",
+  "scripts": {
+    "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "test:chromium": "playwright test --project=chromium",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:mock": "playwright test -c playwright.mock.config.ts",
+    "gate": "playwright test --project=chromium --repeat-each=5",
+    "mock:serve": "node mock-sut/serve.mjs",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@types/node": "^22.0.0",
+    "dotenv": "^16.4.5",
+    "prettier": "^3.3.0",
+    "typescript": "^5.6.0"
+  }
+}

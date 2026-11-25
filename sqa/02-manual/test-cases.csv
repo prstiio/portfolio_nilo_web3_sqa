@@ -1,0 +1,30 @@
+id,title,requirement,priority,type,preconditions,steps,expected_result,automated,status
+TC-LOGIN-001,EXAMPLE: Login with valid credentials,REQ-LOGIN-01,H,F,On login page,"Enter username; enter password; click Login",Product list page is displayed,login.spec.ts,Not Run
+TC-LOGIN-002,EXAMPLE: Login with wrong password,REQ-LOGIN-02,H,N,On login page,"Enter valid username; enter wrong password; click Login",Error shown; user stays on login page,login.spec.ts,Not Run
+TC-LOGIN-003,EXAMPLE: Login with empty username,REQ-LOGIN-03,M,N,On login page,"Leave username empty; enter password; click Login",Username required error shown,login.spec.ts,Not Run
+TC-LOGIN-004,EXAMPLE: Login with empty password,REQ-LOGIN-03,M,N,On login page,"Enter username; leave password empty; click Login",Password required error shown,login.spec.ts,Not Run
+TC-LOGIN-005,EXAMPLE: Locked-out user cannot log in,REQ-LOGIN-04,M,N,On login page,"Enter locked-out credentials; click Login",Locked out error shown; no access,login.spec.ts,Not Run
+TC-LOGIN-006,EXAMPLE: Logout returns to login page,REQ-LOGIN-05,M,F,Logged in,"Open menu; click Logout",Login page displayed,,Not Run
+TC-LOGIN-007,EXAMPLE: Direct URL access without login,REQ-LOGIN-02,H,N,Logged out,"Open product page URL directly",Access denied or redirected to login,login.spec.ts,Not Run
+TC-INV-001,EXAMPLE: Sort by price low to high,REQ-INV-02,M,F,Logged in,"Select Price (low to high)",Prices ascending,inventory.spec.ts,Not Run
+TC-INV-002,EXAMPLE: Sort by name Z to A,REQ-INV-02,M,F,Logged in,"Select Name (Z to A)",Names descending,inventory.spec.ts,Not Run
+TC-CART-001,EXAMPLE: Add product updates cart badge,REQ-CART-01,H,F,"Logged in; cart empty","Click add-to-cart on a product",Badge shows 1,inventory.spec.ts,Not Run
+TC-CART-002,EXAMPLE: Remove product from cart,REQ-CART-02,M,F,Cart has 1 item,"Click Remove",Badge disappears,inventory.spec.ts,Not Run
+TC-CHK-001,EXAMPLE: Checkout requires customer info,REQ-CHK-01,H,N,Cart has 1 item,"Leave fields empty; click Continue",Validation error shown,cart-checkout.spec.ts,Not Run
+TC-CHK-002,EXAMPLE: Complete purchase end-to-end,REQ-CHK-02,H,F,Logged in,"Add item; open cart; checkout; fill info; continue; finish",Confirmation displayed,cart-checkout.spec.ts,Not Run
+TC-API-001,EXAMPLE: Health check responds,REQ-API-01,M,F,,,Status 201 (documented),test_health.py,Not Run
+TC-API-002,EXAMPLE: Auth with valid credentials returns token,REQ-API-02,H,F,,,Token present,test_auth.py,Not Run
+TC-API-003,EXAMPLE: Auth with invalid credentials gives no token,REQ-API-02,H,N,,,No token; reason 'Bad credentials',test_auth.py,Not Run
+TC-API-004,EXAMPLE: Create booking returns id and valid contract,REQ-API-03,H,F,,,Booking created; data echoed; matches schema,test_booking_crud.py,Not Run
+TC-API-005,EXAMPLE: Get booking by id returns stored data,REQ-API-03,H,F,,,Same data as created; matches schema,test_booking_crud.py,Not Run
+TC-API-006,EXAMPLE: List bookings includes the new id,REQ-API-03,M,F,,,Created id is in the list,test_booking_crud.py,Not Run
+TC-API-007,EXAMPLE: Full update with valid token,REQ-API-03,H,F,,,Fields replaced; read-back confirms,test_booking_crud.py,Not Run
+TC-API-008,EXAMPLE: Partial update changes only sent fields,REQ-API-03,M,F,,,Only sent fields change,test_booking_crud.py,Not Run
+TC-API-009,EXAMPLE: Delete booking with valid token,REQ-API-03,H,F,,,Booking no longer retrievable (404),test_booking_crud.py,Not Run
+TC-API-010,EXAMPLE: Update without token,REQ-API-04,H,N,,,403 Forbidden,test_booking_negative.py,Not Run
+TC-API-011,EXAMPLE: Delete without token,REQ-API-04,H,N,,,403; booking remains,test_booking_negative.py,Not Run
+TC-API-012,EXAMPLE: Update with invalid token,REQ-API-04,H,N,,,403 Forbidden,test_booking_negative.py,Not Run
+TC-API-013,EXAMPLE: Get unknown booking id,REQ-API-03,M,N,,,404 Not Found,test_booking_negative.py,Not Run
+TC-API-014,EXAMPLE: Create booking with missing fields,REQ-API-03,M,N,,,Rejected (400 or documented 500),test_booking_negative.py,Not Run
+TC-API-015,EXAMPLE: Get booking with malformed id,REQ-API-03,L,B,,,"400 or 404, never a booking",test_booking_negative.py,Not Run
+TC-API-016,EXAMPLE: Filter bookings by lastname,REQ-API-03,M,F,,,Created id is in the filtered list,test_booking_negative.py,Not Run

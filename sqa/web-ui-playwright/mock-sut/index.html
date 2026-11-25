@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mock Shop (local test double - NOT the real SauceDemo)</title>
+<style>
+  body{font-family:system-ui,sans-serif;margin:0;background:#f7f7f7;color:#222}
+  header{background:#132322;color:#fff;padding:12px 20px;display:flex;gap:16px;align-items:center}
+  main{max-width:900px;margin:20px auto;padding:0 16px}
+  .banner{background:#fff3cd;padding:6px 20px;font-size:13px}
+  .item{background:#fff;border:1px solid #ddd;padding:12px;margin:8px 0;display:flex;justify-content:space-between;align-items:center}
+  .error{background:#e2231a;color:#fff;padding:8px;margin:8px 0}
+  input,select,button{padding:8px;margin:4px 0}
+  .badge{background:#e2231a;color:#fff;border-radius:50%;padding:2px 7px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="banner">Local mock for framework self-testing. Behaviour is modelled on the public demo shop; it is NOT evidence about the real site.</div>
+<div id="app"></div>
+<script>
+const PRODUCTS = [
+  { slug: 'sauce-labs-backpack', name: 'Sauce Labs Backpack', price: 29.99 },
+  { slug: 'sauce-labs-bike-light', name: 'Sauce Labs Bike Light', price: 9.99 },
+  { slug: 'sauce-labs-bolt-t-shirt', name: 'Sauce Labs Bolt T-Shirt', price: 15.99 },
+  { slug: 'sauce-labs-fleece-jacket', name: 'Sauce Labs Fleece Jacket', price: 49.99 },
+  { slug: 'sauce-labs-onesie', name: 'Sauce Labs Onesie', price: 7.99 },
+  { slug: 'test.allthethings()-t-shirt-(red)', name: 'Test.allTheThings() T-Shirt (Red)', price: 15.99 },
+];
+const USERS = { standard_user: 'secret_sauce', locked_out_user: 'secret_sauce' };
+const app = document.getElementById('app');
+const store = {
+  get loggedIn() { return sessionStorage.getItem('user'); },
+  set loggedIn(v) { v ? sessionStorage.setItem('user', v) : sessionStorage.removeItem('user'); },
+  get cart() { return JSON.parse(sessionStorage.getItem('cart') || '[]'); },
+  set cart(v) { sessionStorage.setItem('cart', JSON.stringify(v)); },
+};
+let sort = 'az';
+let flash = '';
+let menuOpen = false;
+let info = {};
+
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const nav = (path) => { history.pushState({}, '', path); render(); };
+const err = (msg) => `<div class="error" data-test="error">${esc(msg)}</div>`;
+
+function header() {
+  const n = store.cart.length;
+  return `<header>
+    <button data-test="open-menu" aria-label="Open Menu" onclick="toggleMenu()">Open Menu</button>
+    <strong>Swag Labs (mock)</strong>
+    <a href="#" data-test="shopping-cart-link" onclick="go('/cart.html');return false">Cart${n ? ` <span class="badge" data-test="shopping-cart-badge">${n}</span>` : ''}</a>
+  </header>
+  ${menuOpen ? '<nav><a href="#" data-test="logout-sidebar-link" onclick="logout();return false">Logout</a></nav>' : ''}`;
+}
+
+function productList() {
+  const items = [...PRODUCTS];
+  if (sort === 'az') items.sort((a, b) => a.name.localeCompare(b.name));
+  if (sort === 'za') items.sort((a, b) => b.name.localeCompare(a.name));
+  if (sort === 'lohi') items.sort((a, b) => a.price - b.price);
+  if (sort === 'hilo') items.sort((a, b) => b.price - a.price);
+  const cart = store.cart;
+  return items.map((p) => `<div class="item" data-test="inventory-item">
+    <div><div data-test="inventory-item-name">${esc(p.name)}</div><div data-test="inventory-item-price">$${p.price.toFixed(2)}</div></div>
+    ${cart.includes(p.slug)
+      ? `<button data-test="remove-${p.slug}" onclick="removeFromCart('${p.slug}')">Remove</button>`
+      : `<button data-test="add-to-cart-${p.slug}" onclick="addToCart('${p.slug}')">Add to cart</button>`}
+  </div>`).join('');
+}
+
+const views = {
+  '/': () => `<main>
+    <h1>Swag Labs (mock)</h1>
+    <form onsubmit="login(event)">
+      <input data-test="username" placeholder="Username" id="u"><br>
+      <input data-test="password" type="password" placeholder="Password" id="p"><br>
+      <input data-test="login-button" type="submit" value="Login">
+    </form>${flash ? err(flash) : ''}</main>`,
+  '/inventory.html': () => `${header()}<main>
+    <h2 data-test="title">Products</h2>
+    <select data-test="product-sort-container" onchange="sort=this.value;render()">
+      ${[['az', 'Name (A to Z)'], ['za', 'Name (Z to A)'], ['lohi', 'Price (low to high)'], ['hilo', 'Price (high to low)']]
+        .map(([v, l]) => `<option value="${v}" ${v === sort ? 'selected' : ''}>${l}</option>`).join('')}
+    </select>${productList()}</main>`,
+  '/cart.html': () => `${header()}<main>
+    <h2 data-test="title">Your Cart</h2>
+    ${store.cart.map((slug) => { const p = PRODUCTS.find((x) => x.slug === slug);
+      return `<div class="item" data-test="inventory-item"><span data-test="inventory-item-name">${esc(p.name)}</span>
+      <button data-test="remove-${slug}" onclick="removeFromCart('${slug}')">Remove</button></div>`; }).join('')}
+    <button data-test="continue-shopping" onclick="go('/inventory.html')">Continue Shopping</button>
+    <button data-test="checkout" onclick="go('/checkout-step-one.html')">Checkout</button></main>`,
+  '/checkout-step-one.html': () => `${header()}<main>
+    <h2 data-test="title">Checkout: Your Information</h2>
+    <input data-test="firstName" placeholder="First Name" id="fn"><br>
+    <input data-test="lastName" placeholder="Last Name" id="ln"><br>
+    <input data-test="postalCode" placeholder="Zip/Postal Code" id="pc"><br>
+    ${flash ? err(flash) : ''}
+    <button data-test="continue" onclick="stepOne()">Continue</button></main>`,
+  '/checkout-step-two.html': () => `${header()}<main>
+    <h2 data-test="title">Checkout: Overview</h2>
+    <p>Items: ${store.cart.length} · Buyer: ${esc(info.firstName || '')} ${esc(info.lastName || '')}</p>
+    <button data-test="finish" onclick="finish()">Finish</button></main>`,
+  '/checkout-complete.html': () => `${header()}<main>
+    <h2 data-test="title">Checkout: Complete!</h2>
+    <h3 data-test="complete-header">Thank you for your order!</h3></main>`,
+};
+
+function render() {
+  let path = location.pathname;
+  if (!views[path]) path = '/';
+  if (path !== '/' && !store.loggedIn) {
+    flash = `Epic sadface: You can only access '${path}' when you are logged in.`;
+    history.replaceState({}, '', '/');
+    path = '/';
+  }
+  app.innerHTML = views[path]();
+  if (path !== '/') flash = '';
+}
+function go(path) { flash = ''; menuOpen = false; nav(path); }
+function toggleMenu() { menuOpen = !menuOpen; render(); }
+function login(e) {
+  e.preventDefault();
+  const u = document.getElementById('u').value, p = document.getElementById('p').value;
+  if (!u) flash = 'Epic sadface: Username is required';
+  else if (!p) flash = 'Epic sadface: Password is required';
+  else if (USERS[u] !== p) flash = 'Epic sadface: Username and password do not match any user in this service';
+  else if (u === 'locked_out_user') flash = 'Epic sadface: Sorry, this user has been locked out.';
+  else { flash = ''; store.loggedIn = u; return nav('/inventory.html'); }
+  render();
+}
+function logout() { store.loggedIn = null; store.cart = []; menuOpen = false; flash = ''; nav('/'); }
+function addToCart(slug) { store.cart = [...store.cart, slug]; render(); }
+function removeFromCart(slug) { store.cart = store.cart.filter((s) => s !== slug); render(); }
+function stepOne() {
+  const f = document.getElementById('fn').value, l = document.getElementById('ln').value, z = document.getElementById('pc').value;
+  if (!f) flash = 'Error: First Name is required';
+  else if (!l) flash = 'Error: Last Name is required';
+  else if (!z) flash = 'Error: Postal Code is required';
+  else { flash = ''; info = { firstName: f, lastName: l }; return nav('/checkout-step-two.html'); }
+  render();
+}
+function finish() { store.cart = []; nav('/checkout-complete.html'); }
+window.addEventListener('popstate', render);
+render();
+</script>
+</body>
+</html>
